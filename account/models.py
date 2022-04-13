@@ -1,10 +1,9 @@
-from unicodedata import name
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 
 
 class UserManager(BaseUserManager):
-    def create_user (self, name, email, passwork=None):
+    def create_user (self, name, email, password=None):
 
         if not email:               
                 raise ValueError('Users must have an email address')
@@ -14,6 +13,8 @@ class UserManager(BaseUserManager):
             email = self.normalize_email(email),
             name = name,
             )
+        user.set_password(password)
+
         user.save()
         return user
 
@@ -30,8 +31,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['name']
 
     def get_full_name(self):
-        return name
+        return self.name
     def get_short_name(self):
-        return name
+        return self.name
     def __str__(self):
         return self.email
+
+
